@@ -1,8 +1,8 @@
 import 'dart:convert';
 
+import 'package:http/http.dart';
 import 'package:news_app/data/model/article_response.dart';
 import 'package:news_app/data/model/sources_response.dart';
-import 'package:http/http.dart';
 
 class ApisManager {
   static String _apiKey = "2b1d126ab96b44e48e7d202111b572a1";
@@ -10,9 +10,9 @@ class ApisManager {
   static String _sourceEndPoint = "/v2/top-headlines/sources";
   static String _articalEndPoint = "/v2/everything";
 
-  static Future<SourcesResponse> getSources() async {
-    Response serverResponse =
-        await get(Uri.parse('$_baseUrl$_sourceEndPoint?apiKey=$_apiKey'));
+  static Future<SourcesResponse> getSources(String categoryId) async {
+    Response serverResponse = await get(Uri.parse(
+        '$_baseUrl$_sourceEndPoint?apiKey=$_apiKey&category=$categoryId'));
     if (serverResponse.statusCode >= 200 && serverResponse.statusCode < 300) {
       Map json = jsonDecode(serverResponse.body)
           as Map; // to convert body from string to map

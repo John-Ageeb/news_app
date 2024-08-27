@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:news_app/data/apis_manager.dart';
 import 'package:news_app/data/model/sources_response.dart';
-import 'package:news_app/ui/screens/home/tabs/news_list.dart';
-
-import '../../../../widgets/error_view.dart';
-import '../../../../widgets/loading_view.dart';
+import 'package:news_app/ui/screens/home/tabs/tabs_lists/news_list.dart';
+import 'package:news_app/utilites/app_colors.dart';
+import 'package:news_app/widgets/error_view.dart';
+import 'package:news_app/widgets/loading_view.dart';
 
 class TabsList extends StatefulWidget {
-  const TabsList({super.key});
+  String categoryId;
+  String? searchContant;
+
+  TabsList(this.categoryId, {super.key, this.searchContant});
 
   @override
   State<TabsList> createState() => _TabsListState();
@@ -19,7 +22,7 @@ class _TabsListState extends State<TabsList> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<SourcesResponse>(
-        future: ApisManager.getSources(),
+        future: ApisManager.getSources(widget.categoryId),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
             return ErrorView(
@@ -39,11 +42,12 @@ class _TabsListState extends State<TabsList> {
       padding: EdgeInsets.all(12),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(22),
-        border: Border.all(color: Colors.blue, width: 3),
-        color: isSelected ? Colors.blue : Colors.white,
+        border: Border.all(color: AppColor.primary, width: 3),
+        color: isSelected ? AppColor.primary : Colors.white,
       ),
       child: Text(source.name ?? "",
-          style: TextStyle(color: isSelected ? Colors.white : Colors.blue)),
+          style:
+              TextStyle(color: isSelected ? Colors.white : AppColor.primary)),
     );
   }
 
