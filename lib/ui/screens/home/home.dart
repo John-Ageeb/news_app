@@ -18,6 +18,7 @@ class _HomeState extends State<Home> {
   late Widget currantTab;
   bool IsSearchAppBar = false;
   TextEditingController searchContant = TextEditingController();
+  String catBackEndId = "";
 
   @override
   void initState() {
@@ -51,11 +52,63 @@ class _HomeState extends State<Home> {
   }
 
   AppBar buildAppBar() {
-    if (IsSearchAppBar == false) {
-      return AppBar(
+//    if (IsSearchAppBar == false) {
+    return AppBar(
         backgroundColor: AppColor.primary,
-        title: InkWell(
-          onTap: () {
+      title: IsSearchAppBar
+          ? TextField(
+              controller: searchContant,
+              decoration: InputDecoration(
+                prefixIcon: InkWell(
+                    onTap: () {
+                      IsSearchAppBar = false;
+                      searchContant.text = "";
+                      setState(() {});
+                    },
+                    child: Icon(
+                      Icons.close,
+                      size: 26,
+                      color: AppColor.primary,
+                    )),
+                suffixIcon: InkWell(
+                    onTap: () {
+                      onCategoryClickPlusSearch(
+                          searchContant: searchContant.text);
+                    },
+                    child: Icon(
+                      Icons.search,
+                      size: 26,
+                      color: AppColor.primary,
+                    )),
+                hintText: 'Search Article',
+                hintStyle: TextStyle(
+                    color: AppColor.primary.withOpacity(.4), fontSize: 18),
+                // Placeholder text
+                filled: true,
+                // Enable background color
+                fillColor: Colors.white,
+                // Set background color to white
+                contentPadding:
+                    EdgeInsets.symmetric(vertical: 15.0, horizontal: 20.0),
+                // Padding inside the text field
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(30.0), // Rounded corners
+                  borderSide: BorderSide.none, // Remove border
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(30.0), // Rounded corners
+                  borderSide: BorderSide.none, // Remove border when enabled
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(30.0), // Rounded corners
+                  borderSide: BorderSide(
+                    color: Colors.blue, // Border color when focused
+                  ),
+                ),
+              ),
+            )
+          : InkWell(
+              onTap: () {
             IsSearchAppBar = true;
             setState(() {});
           },
@@ -87,63 +140,6 @@ class _HomeState extends State<Home> {
         )),
         toolbarHeight: MediaQuery.of(context).size.height * .09,
       );
-    } else {
-      return AppBar(
-        backgroundColor: AppColor.primary,
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.vertical(
-          bottom: Radius.circular(22),
-        )),
-        toolbarHeight: MediaQuery.of(context).size.height * .09,
-        title: TextField(
-          controller: searchContant,
-          decoration: InputDecoration(
-            prefixIcon: InkWell(
-                onTap: () {
-                  IsSearchAppBar = false;
-                  setState(() {});
-                },
-                child: Icon(
-                  Icons.close,
-                  size: 26,
-                  color: AppColor.primary,
-                )),
-            suffixIcon: InkWell(
-                onTap: () {},
-                child: Icon(
-                  Icons.search,
-                  size: 26,
-                  color: AppColor.primary,
-                )),
-            hintText: 'Search Article',
-            hintStyle: TextStyle(
-                color: AppColor.primary.withOpacity(.4), fontSize: 18),
-            // Placeholder text
-            filled: true,
-            // Enable background color
-            fillColor: Colors.white,
-            // Set background color to white
-            contentPadding:
-                EdgeInsets.symmetric(vertical: 15.0, horizontal: 20.0),
-            // Padding inside the text field
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(30.0), // Rounded corners
-              borderSide: BorderSide.none, // Remove border
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(30.0), // Rounded corners
-              borderSide: BorderSide.none, // Remove border when enabled
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(30.0), // Rounded corners
-              borderSide: BorderSide(
-                color: Colors.blue, // Border color when focused
-              ),
-            ),
-          ),
-        ),
-      );
-    }
   }
 
   Drawer buildDrawer() {
@@ -209,6 +205,14 @@ class _HomeState extends State<Home> {
 
   onCategoryClick(CategoryDM categoryDM) {
     currantTab = TabsList(categoryDM.backEndId);
+    String catBackEndId = categoryDM.backEndId;
+    print("catBackEndId =  $catBackEndId");
+    setState(() {});
+  }
+
+  onCategoryClickPlusSearch({String? searchContant}) {
+    currantTab = TabsList(catBackEndId, searchContant: searchContant);
+
     setState(() {});
   }
 

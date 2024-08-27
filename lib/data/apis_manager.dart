@@ -25,16 +25,30 @@ class ApisManager {
     }
   }
 
-  static Future<ArticleResponse> getArtical(String souceId) async {
-    Response serverResponse = await get(Uri.parse(
-        '$_baseUrl$_articalEndPoint?apiKey=$_apiKey&sources=$souceId'));
-    if (serverResponse.statusCode >= 200 && serverResponse.statusCode < 300) {
-      Map json = jsonDecode(serverResponse.body)
-          as Map; // to convert body from string to map
-      return ArticleResponse.fromJson(
-          json); // convertt from Json (map) to variables
+  static Future<ArticleResponse> getArtical(
+      String souceId, String? searchContant) async {
+    if (searchContant != "") {
+      Response serverResponse = await get(Uri.parse(
+          '$_baseUrl$_articalEndPoint?apiKey=$_apiKey&sources=$souceId&q=$searchContant'));
+      if (serverResponse.statusCode >= 200 && serverResponse.statusCode < 300) {
+        Map json = jsonDecode(serverResponse.body)
+            as Map; // to convert body from string to map
+        return ArticleResponse.fromJson(
+            json); // convertt from Json (map) to variables
+      } else {
+        throw "Somthing went wrong";
+      }
     } else {
-      throw "Somthing went wrong";
+      Response serverResponse = await get(Uri.parse(
+          '$_baseUrl$_articalEndPoint?apiKey=$_apiKey&sources=$souceId'));
+      if (serverResponse.statusCode >= 200 && serverResponse.statusCode < 300) {
+        Map json = jsonDecode(serverResponse.body)
+            as Map; // to convert body from string to map
+        return ArticleResponse.fromJson(
+            json); // convertt from Json (map) to variables
+      } else {
+        throw "Somthing went wrong";
+      }
     }
   }
 }

@@ -10,14 +10,15 @@ import '../../../../../widgets/error_view.dart';
 import '../../../../../widgets/loading_view.dart';
 
 class NewsList extends StatelessWidget {
-  NewsList({super.key, required this.source});
+  NewsList({super.key, required this.source, this.searchContant});
 
+  String? searchContant;
   Source source;
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<ArticleResponse>(
-        future: ApisManager.getArtical(source.id!),
+        future: ApisManager.getArtical(source.id!, searchContant),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
             return ErrorView(

@@ -30,7 +30,7 @@ class _TabsListState extends State<TabsList> {
               onRetryCkick: () {},
             );
           } else if (snapshot.hasData) {
-            return buildTabsList(snapshot.data!.sources!);
+            return buildTabsList(snapshot.data!.sources!, widget.searchContant);
           } else {
             return LoadingView();
           }
@@ -51,7 +51,7 @@ class _TabsListState extends State<TabsList> {
     );
   }
 
-  Widget buildTabsList(List<Source> sources) {
+  Widget buildTabsList(List<Source> sources, String? searchContant) {
     List<Widget> tabs = sources
         .map((source) =>
             mapSourceToTab(source, selectedTabIndex == sources.indexOf(source)))
@@ -59,9 +59,10 @@ class _TabsListState extends State<TabsList> {
     List<Widget> tabsBody = sources
         .map((sources) => NewsList(
               source: sources,
+              searchContant: searchContant,
             ))
         .toList();
-
+    print("NewsList=$searchContant");
     return DefaultTabController(
       length: sources.length,
       child: Column(
