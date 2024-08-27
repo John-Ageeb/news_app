@@ -4,6 +4,9 @@ import 'package:news_app/ui/screens/home/tabs/categories/categories_tab.dart';
 import 'package:news_app/ui/screens/home/tabs/settings/settings_tab.dart';
 import 'package:news_app/ui/screens/home/tabs/tabs_lists/tabs_list.dart';
 import 'package:news_app/utilites/app_colors.dart';
+import 'package:provider/provider.dart';
+
+import '../../provider/search_provider.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -17,7 +20,8 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   late Widget currantTab;
   bool IsSearchAppBar = false;
-  TextEditingController searchContant = TextEditingController();
+  TextEditingController searchController = TextEditingController();
+  late SearchProvider searchContant;
   String catBackEndId = "";
 
   @override
@@ -29,6 +33,8 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
+    searchContant = Provider.of(context);
+
     return SafeArea(
       // to start appbar under mpbil notification bar
       child: WillPopScope(
@@ -57,12 +63,14 @@ class _HomeState extends State<Home> {
         backgroundColor: AppColor.primary,
       title: IsSearchAppBar
           ? TextField(
-              controller: searchContant,
+              controller: searchController,
               decoration: InputDecoration(
                 prefixIcon: InkWell(
                     onTap: () {
+                      searchContant.searchContant = "";
+                      searchController.text = "";
                       IsSearchAppBar = false;
-                      searchContant.text = "";
+                      searchContant.notifyListeners();
                       setState(() {});
                     },
                     child: Icon(
@@ -72,8 +80,9 @@ class _HomeState extends State<Home> {
                     )),
                 suffixIcon: InkWell(
                     onTap: () {
+                      searchContant.searchContant = searchController.text;
                       onCategoryClickPlusSearch(
-                          searchContant: searchContant.text);
+                          searchContant: searchContant.searchContant);
                     },
                     child: Icon(
                       Icons.search,
@@ -211,8 +220,9 @@ class _HomeState extends State<Home> {
   }
 
   onCategoryClickPlusSearch({String? searchContant}) {
-    currantTab = TabsList(catBackEndId, searchContant: searchContant);
-
+    currantTab = TabsList(
+      catBackEndId,
+    );
     setState(() {});
   }
 

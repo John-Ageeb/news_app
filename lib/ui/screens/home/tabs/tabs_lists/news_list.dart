@@ -4,21 +4,27 @@ import 'package:news_app/data/apis_manager.dart';
 import 'package:news_app/data/model/article_response.dart';
 import 'package:news_app/data/model/sources_response.dart';
 import 'package:news_app/utilites/app_colors.dart';
+import 'package:provider/provider.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 import '../../../../../widgets/error_view.dart';
 import '../../../../../widgets/loading_view.dart';
+import '../../../../provider/search_provider.dart';
 
 class NewsList extends StatelessWidget {
-  NewsList({super.key, required this.source, this.searchContant});
+  NewsList({super.key, required this.source});
 
-  String? searchContant;
+  late SearchProvider? searchContant;
+
   Source source;
 
   @override
   Widget build(BuildContext context) {
+    searchContant = Provider.of(context);
+
     return FutureBuilder<ArticleResponse>(
-        future: ApisManager.getArtical(source.id!, searchContant),
+        future:
+            ApisManager.getArtical(source.id!, searchContant?.searchContant),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
             return ErrorView(

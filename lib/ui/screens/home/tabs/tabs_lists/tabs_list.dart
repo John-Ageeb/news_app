@@ -5,12 +5,14 @@ import 'package:news_app/ui/screens/home/tabs/tabs_lists/news_list.dart';
 import 'package:news_app/utilites/app_colors.dart';
 import 'package:news_app/widgets/error_view.dart';
 import 'package:news_app/widgets/loading_view.dart';
+import 'package:provider/provider.dart';
+
+import '../../../../provider/search_provider.dart';
 
 class TabsList extends StatefulWidget {
   String categoryId;
-  String? searchContant;
 
-  TabsList(this.categoryId, {super.key, this.searchContant});
+  TabsList(this.categoryId, {super.key});
 
   @override
   State<TabsList> createState() => _TabsListState();
@@ -18,9 +20,12 @@ class TabsList extends StatefulWidget {
 
 class _TabsListState extends State<TabsList> {
   int selectedTabIndex = 0;
+  late SearchProvider? searchContant;
 
   @override
   Widget build(BuildContext context) {
+    searchContant = Provider.of(context);
+
     return FutureBuilder<SourcesResponse>(
         future: ApisManager.getSources(widget.categoryId),
         builder: (context, snapshot) {
@@ -30,7 +35,8 @@ class _TabsListState extends State<TabsList> {
               onRetryCkick: () {},
             );
           } else if (snapshot.hasData) {
-            return buildTabsList(snapshot.data!.sources!, widget.searchContant);
+            return buildTabsList(
+                snapshot.data!.sources!, searchContant?.searchContant);
           } else {
             return LoadingView();
           }
@@ -59,7 +65,6 @@ class _TabsListState extends State<TabsList> {
     List<Widget> tabsBody = sources
         .map((sources) => NewsList(
               source: sources,
-              searchContant: searchContant,
             ))
         .toList();
     print("NewsList=$searchContant");
