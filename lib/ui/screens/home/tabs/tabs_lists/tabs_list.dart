@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:news_app/data/model/sources_response.dart';
 import 'package:news_app/ui/screens/home/tabs/tabs_lists/news_list.dart';
 import 'package:news_app/ui/screens/home/tabs/tabs_lists/tabs_view_model.dart';
@@ -6,9 +7,15 @@ import 'package:news_app/utilites/app_colors.dart';
 import 'package:news_app/widgets/error_view.dart';
 import 'package:news_app/widgets/loading_view.dart';
 import 'package:provider/provider.dart';
-
 import '../../../../base/base_api_state.dart';
 import '../../../../provider/search_provider.dart';
+
+
+/// BlocBuilder , BlocSelector, BlocProvider , MultiBlocProvider
+/// BlocListener , MultiBlocListener , BlocConsumer , RepositoryProvider
+
+
+
 
 class TabsList extends StatefulWidget {
   String categoryId;
@@ -34,23 +41,28 @@ class _TabsListState extends State<TabsList> {
   @override
   Widget build(BuildContext context) {
     searchContant = Provider.of(context);
-    return ChangeNotifierProvider(
-        create: (_) => viewModel,
-        builder: (context, _) {
-          viewModel = Provider.of(context);
-          if (viewModel.sourcesApiState is BaseLoadingState) {
-            return LoadingView();
-          } else if (viewModel.sourcesApiState is BaseErrorState) {
-            String errorMessage =
-                (viewModel.sourcesApiState as BaseErrorState).errorMassage;
+    return BlocProvider(
 
-            return ErrorView(error: errorMessage, onRetryCkick: () {});
-          } else {
-            List<Source> sources =
-                (viewModel.sourcesApiState as BaseSuccessState).data;
-            return buildTabsList(sources, searchContant?.searchContant);
-          }
-        });
+        create: create)
+
+
+    // return ChangeNotifierProvider(
+    //     create: (_) => viewModel,
+    //     builder: (context, _) {
+    //       viewModel = Provider.of(context);
+    //       if (viewModel.sourcesApiState is BaseLoadingState) {
+    //         return LoadingView();
+    //       } else if (viewModel.sourcesApiState is BaseErrorState) {
+    //         String errorMessage =
+    //             (viewModel.sourcesApiState as BaseErrorState).errorMassage;
+    //
+    //         return ErrorView(error: errorMessage, onRetryCkick: () {});
+    //       } else {
+    //         List<Source> sources =
+    //             (viewModel.sourcesApiState as BaseSuccessState).data;
+    //         return buildTabsList(sources, searchContant?.searchContant);
+    //       }
+    //     });
   }
 
   Widget mapSourceToTab(Source source, bool isSelected) {

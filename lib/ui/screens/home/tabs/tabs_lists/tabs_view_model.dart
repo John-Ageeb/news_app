@@ -1,25 +1,30 @@
-import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../data/apis_manager.dart';
 import '../../../../../data/model/sources_response.dart';
 import '../../../../base/base_api_state.dart';
 
-class TabsViewModel extends ChangeNotifier {
-  BaseApiState sourcesApiState = BaseLoadingState();
+class TabsViewModel extends Cubit<TabsViewModelState> {
+  TabsViewModel() : super(TabsViewModelState.intial());
 
   getSources(String categoryId) async {
     try {
-      sourcesApiState = BaseLoadingState();
-      notifyListeners();
+      emit(TabsViewModelState(BaseLoadingState()));
       List<Source> sources =
           (await ApisManager.getSources(categoryId)).sources!;
-      sourcesApiState = BaseSuccessState(sources);
-
-      notifyListeners();
+      emit(TabsViewModelState(BaseSuccessState(sources)));
     } catch (e) {
-      sourcesApiState = BaseErrorState(e.toString());
-
-      notifyListeners();
+      emit(TabsViewModelState(BaseErrorState(e.toString())));
     }
+  }
+}
+
+class TabsViewModelState {
+  late BaseApiState sourcesApiState;
+
+  TabsViewModelState(this.sourcesApiState);
+
+  TabsViewModelState.intial() {
+    sourcesApiState = BaseLoadingState();
   }
 }
