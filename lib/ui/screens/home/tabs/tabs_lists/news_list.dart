@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:news_app/data/apis_manager.dart';
 import 'package:news_app/data/model/article_response.dart';
 import 'package:news_app/data/model/sources_response.dart';
+import 'package:news_app/ui/screens/home/tabs/news_body/news_body.dart';
 import 'package:news_app/utilites/app_colors.dart';
 import 'package:provider/provider.dart';
 import 'package:timeago/timeago.dart' as timeago;
@@ -11,20 +12,25 @@ import '../../../../../widgets/error_view.dart';
 import '../../../../../widgets/loading_view.dart';
 import '../../../../provider/search_provider.dart';
 
-class NewsList extends StatelessWidget {
+class NewsList extends StatefulWidget {
   NewsList({super.key, required this.source});
 
-  late SearchProvider? searchContant;
-
   Source source;
+
+  @override
+  State<NewsList> createState() => _NewsListState();
+}
+
+class _NewsListState extends State<NewsList> {
+  late SearchProvider? searchContant;
 
   @override
   Widget build(BuildContext context) {
     searchContant = Provider.of(context);
 
     return FutureBuilder<ArticleResponse>(
-        future:
-            ApisManager.getArtical(source.id!, searchContant?.searchContant),
+        future: ApisManager.getArtical(
+            widget.source.id!, searchContant?.searchContant),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
             return ErrorView(
@@ -49,11 +55,17 @@ class NewsList extends StatelessWidget {
   mapArticalToWidget(Articles article, BuildContext context) {
     return Column(
       children: [
-        CachedNetworkImage(
-          imageUrl: article.urlToImage ?? "",
-          placeholder: (context, url) => LoadingView(),
-          errorWidget: (context, url, error) => Icon(Icons.error),
-          height: MediaQuery.of(context).size.height * .25,
+        InkWell(
+          onTap: () {
+            NewsBody();
+            setState(() {});
+          },
+          child: CachedNetworkImage(
+            imageUrl: article.urlToImage ?? "",
+            placeholder: (context, url) => LoadingView(),
+            errorWidget: (context, url, error) => Icon(Icons.error),
+            height: MediaQuery.of(context).size.height * .25,
+          ),
         ),
         // Image.network(article.urlToImage ?? ""),
         Align(

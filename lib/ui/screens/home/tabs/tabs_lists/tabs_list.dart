@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:news_app/data/apis_manager.dart';
 import 'package:news_app/data/model/sources_response.dart';
 import 'package:news_app/ui/screens/home/tabs/tabs_lists/news_list.dart';
+import 'package:news_app/ui/screens/home/tabs/tabs_lists/tabs_view_model.dart';
 import 'package:news_app/utilites/app_colors.dart';
 import 'package:news_app/widgets/error_view.dart';
 import 'package:news_app/widgets/loading_view.dart';
@@ -21,24 +21,33 @@ class TabsList extends StatefulWidget {
 class _TabsListState extends State<TabsList> {
   int selectedTabIndex = 0;
   late SearchProvider? searchContant;
+  TabsViewModel viewModel = TabsViewModel();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    viewModel.getSources(widget.categoryId);
+  }
 
   @override
   Widget build(BuildContext context) {
     searchContant = Provider.of(context);
-
-    return FutureBuilder<SourcesResponse>(
-        future: ApisManager.getSources(widget.categoryId),
-        builder: (context, snapshot) {
-          if (snapshot.hasError) {
-            return ErrorView(
-              error: snapshot.error.toString(),
-              onRetryCkick: () {},
-            );
-          } else if (snapshot.hasData) {
-            return buildTabsList(
-                snapshot.data!.sources!, searchContant?.searchContant);
-          } else {
+    return ChangeNotifierProvider(
+        create: (_) => viewModel,
+        builder: (context, _) {
+          viewModel = Provider.of(context);
+          if (viewModel.sourcesApiState is BaseLoadingState) {
             return LoadingView();
+          } else if (viewModel.sourcesApiState is BaseErrorState) {
+            String errorMessage =
+                (viewModel.sourcesApiState as BaseErrorState).errorMassage;
+
+            return ErrorView(error: errorMessage, onRetryCkick: () {});
+          } else {
+            List<Source> sources =
+                (viewModel.sourcesApiState as BaseSuccessState).data;
+            return buildTabsList(sources, searchContant?.searchContant);
           }
         });
   }
@@ -94,3 +103,19 @@ class _TabsListState extends State<TabsList> {
     );
   }
 }
+
+// return FutureBuilder<SourcesResponse>(
+// future: ApisManager.getSources(widget.categoryId),
+// builder: (context, snapshot) {
+// if (snapshot.hasError) {
+// return ErrorView(
+// error: snapshot.error.toString(),
+// onRetryCkick: () {},
+// );
+// } else if (snapshot.hasData) {
+// return buildTabsList(
+// snapshot.data!.sources!, searchContant?.searchContant);
+// } else {
+// return LoadingView();
+// }
+// });

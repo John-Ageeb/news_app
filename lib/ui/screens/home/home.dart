@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:news_app/data/model/category_dm.dart';
 import 'package:news_app/ui/screens/home/tabs/categories/categories_tab.dart';
-import 'package:news_app/ui/screens/home/tabs/news_body/news_body.dart';
 import 'package:news_app/ui/screens/home/tabs/settings/settings_tab.dart';
 import 'package:news_app/ui/screens/home/tabs/tabs_lists/tabs_list.dart';
 import 'package:news_app/utilites/app_colors.dart';
@@ -10,8 +9,7 @@ import 'package:provider/provider.dart';
 import '../../provider/search_provider.dart';
 
 class Home extends StatefulWidget {
-  const Home({super.key});
-
+  Home({super.key});
   static String routeName = "home";
 
   @override
@@ -24,7 +22,6 @@ class _HomeState extends State<Home> {
   TextEditingController searchController = TextEditingController();
   late SearchProvider searchContant;
   String catBackEndId = "";
-
   @override
   void initState() {
     // TODO: implement initState
@@ -51,7 +48,7 @@ class _HomeState extends State<Home> {
         },
         child: Scaffold(
           appBar: buildAppBar(),
-          body: NewsBody(), // currantTab
+          body: currantTab, // currantTab
           drawer: buildDrawer(),
         ),
       ),
