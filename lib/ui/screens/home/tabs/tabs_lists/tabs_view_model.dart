@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../../data/apis_manager.dart';
 import '../../../../../data/model/sources_response.dart';
+import '../../../../base/base_api_state.dart';
 
 class TabsViewModel extends ChangeNotifier {
   BaseApiState sourcesApiState = BaseLoadingState();
@@ -21,19 +22,4 @@ class TabsViewModel extends ChangeNotifier {
       notifyListeners();
     }
   }
-}
-
-abstract class BaseApiState {}
-
-class BaseLoadingState extends BaseApiState {}
-
-class BaseSuccessState<T> extends BaseApiState {
-  T data; // to be generic fro all type of data
-  BaseSuccessState(this.data);
-}
-
-class BaseErrorState extends BaseApiState {
-  String errorMassage;
-
-  BaseErrorState(this.errorMassage);
 }

@@ -7,6 +7,7 @@ import 'package:news_app/widgets/error_view.dart';
 import 'package:news_app/widgets/loading_view.dart';
 import 'package:provider/provider.dart';
 
+import '../../../../base/base_api_state.dart';
 import '../../../../provider/search_provider.dart';
 
 class TabsList extends StatefulWidget {
