@@ -11,20 +11,27 @@ import '../../../../../widgets/error_view.dart';
 import '../../../../../widgets/loading_view.dart';
 import '../../../../provider/search_provider.dart';
 
-class NewsList extends StatelessWidget {
-  NewsList({super.key, required this.source});
+class NewsList extends StatefulWidget {
+  NewsList({super.key, required this.source, this.onNewsClick});
 
-  late SearchProvider? searchContant;
+  Function? onNewsClick;
 
   Source source;
+
+  @override
+  State<NewsList> createState() => _NewsListState();
+}
+
+class _NewsListState extends State<NewsList> {
+  late SearchProvider? searchContant;
 
   @override
   Widget build(BuildContext context) {
     searchContant = Provider.of(context);
 
     return FutureBuilder<ArticleResponse>(
-        future:
-            ApisManager.getArtical(source.id!, searchContant?.searchContant),
+        future: ApisManager.getArtical(
+            widget.source.id!, searchContant?.searchContant),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
             return ErrorView(
@@ -60,9 +67,14 @@ class NewsList extends StatelessWidget {
             alignment: AlignmentDirectional.topStart,
             child: Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Text(
-                article.source!.name ?? "",
-                style: TextStyle(color: AppColor.gray),
+              child: InkWell(
+                onTap: () {
+                  return widget.onNewsClick!(article);
+                },
+                child: Text(
+                  article.source!.name ?? "",
+                  style: TextStyle(color: AppColor.gray),
+                ),
               ),
             )),
         Align(
@@ -95,3 +107,4 @@ class NewsList extends StatelessWidget {
     return timeago.format(dateTime);
   }
 }
+
