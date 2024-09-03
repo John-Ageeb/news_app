@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:news_app/data/model/article_response.dart';
 import 'package:news_app/data/model/category_dm.dart';
 import 'package:news_app/ui/screens/home/tabs/categories/categories_tab.dart';
 import 'package:news_app/ui/screens/home/tabs/settings/settings_tab.dart';
-import 'package:news_app/ui/screens/home/tabs/tabs_lists/news_body.dart';
 import 'package:news_app/ui/screens/home/tabs/tabs_lists/tabs_list.dart';
 import 'package:news_app/utilites/app_colors.dart';
 import 'package:provider/provider.dart';
@@ -215,7 +213,9 @@ class _HomeState extends State<Home> {
   }
 
   onCategoryClick(CategoryDM categoryDM) {
-    currantTab = TabsList(categoryDM.backEndId);
+    currantTab = TabsList(
+      categoryDM.backEndId,
+    );
     String catBackEndId = categoryDM.backEndId;
     print("catBackEndId =  $catBackEndId");
     setState(() {});
@@ -261,8 +261,8 @@ class _HomeState extends State<Home> {
     setState(() {});
   }
 
-  onNewsClick(Articles articles) {
-    currantTab = NewsBody(articles);
-    setState(() {});
-  }
+// onNewsClick(Articles articles) {
+//   currantTab = NewsBody(articles);
+//   setState(() {});
+// }
 }

@@ -35,6 +35,7 @@
 import 'package:flutter/material.dart';
 import 'package:news_app/ui/provider/search_provider.dart';
 import 'package:news_app/ui/screens/home/home.dart';
+import 'package:news_app/ui/screens/home/tabs/tabs_lists/news_body.dart';
 import 'package:provider/provider.dart';
 
 void main() {
@@ -52,6 +53,7 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         routes: {
           Home.routeName: (_) => Home(),
+          NewsBody.routename: (_) => NewsBody(),
         },
         initialRoute: Home.routeName,
       ),

@@ -10,6 +10,7 @@ import 'package:timeago/timeago.dart' as timeago;
 import '../../../../../widgets/error_view.dart';
 import '../../../../../widgets/loading_view.dart';
 import '../../../../provider/search_provider.dart';
+import 'news_body.dart';
 
 class NewsList extends StatefulWidget {
   NewsList({super.key, required this.source, this.onNewsClick});
@@ -56,25 +57,29 @@ class _NewsListState extends State<NewsList> {
   mapArticalToWidget(Articles article, BuildContext context) {
     return Column(
       children: [
-        CachedNetworkImage(
-          imageUrl: article.urlToImage ?? "",
-          placeholder: (context, url) => LoadingView(),
-          errorWidget: (context, url, error) => Icon(Icons.error),
-          height: MediaQuery.of(context).size.height * .25,
+        InkWell(
+          onTap: () {
+            Navigator.pushNamed(context, NewsBody.routename,
+                arguments: article);
+            // arguments: SuraDetailsArgs(
+            // suraName: Constants.suraNames[index],
+            // filename: "${index + 1}.txt")
+          },
+          child: CachedNetworkImage(
+            imageUrl: article.urlToImage ?? "",
+            placeholder: (context, url) => LoadingView(),
+            errorWidget: (context, url, error) => Icon(Icons.error),
+            height: MediaQuery.of(context).size.height * .25,
+          ),
         ),
         // Image.network(article.urlToImage ?? ""),
         Align(
             alignment: AlignmentDirectional.topStart,
             child: Padding(
               padding: const EdgeInsets.all(8.0),
-              child: InkWell(
-                onTap: () {
-                  return widget.onNewsClick!(article);
-                },
-                child: Text(
-                  article.source!.name ?? "",
-                  style: TextStyle(color: AppColor.gray),
-                ),
+              child: Text(
+                article.source!.name ?? "",
+                style: TextStyle(color: AppColor.gray),
               ),
             )),
         Align(
