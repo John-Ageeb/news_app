@@ -10,4 +10,5 @@ class AppColor {
   static Color enviroment = Color(0xff4882CF);
   static Color science = Color(0xffF2D352);
   static Color gray = Color(0xff79828B);
+  static Color darkGray = Color(0xff3b3d40);
 }
