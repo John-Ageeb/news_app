@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:url_launcher/url_launcher.dart';
@@ -71,7 +73,7 @@ class NewsBody extends StatelessWidget {
             Spacer(),
             InkWell(
               onTap: () async {
-                return launchInBrowser(Uri.parse(article.url!));
+                return launchInBrowser((article.url!));
               },
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
@@ -123,10 +125,10 @@ class NewsBody extends StatelessWidget {
     return timeago.format(dateTime);
   }
 
-  Future<void> launchInBrowser(Uri url) async {
-    if (!await launchUrl(
+  Future<void> launchInBrowser(String url) async {
+    if (!await launch(
       url,
-      mode: LaunchMode.externalApplication,
+      // mode: LaunchMode.externalApplication,
     )) {
       throw Exception('Could not launch $url');
     }
